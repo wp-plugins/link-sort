@@ -20,7 +20,7 @@
 Plugin Name: CoCo Linksort
 Plugin URI: http://www.acwind.net/blog/?p=478
 Description: Sort your links by date, url, name, description, etc.
-Version: 0.3
+Version: 0.2
 Author: CoCo
 Author URI: http://www.acwind.net/blog
 */
