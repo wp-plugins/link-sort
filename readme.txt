@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: CoCo
+Contributors: hylwrcool@gmail.com
 Donate link: 
 Tags: links, sort
 Requires at least: 2.6
@@ -16,26 +16,11 @@ It also can sort your links by custom.
 
 == Installation ==
 
-Download the zip file to your local machine.
-1.Unzip the file
-2.Upload coco_link_sort folder to the /wp-content/plugins/ directory
-3.Activate the plugin through the ¡®Plugins¡® menu in WordPress
-4.Now go to Options->Link Sort and change settings.
+Download the zip file to your local machine.<br />
+1.Unzip the file<br />
+2.Upload link-sort folder to the /wp-content/plugins/ directory<br />
+3.Activate the plugin through the 'Plugins' menu in WordPress<br />
+4.Now go to Options->Link Sort and change settings.<br />
 
 
 == Frequently Asked Questions ==
-
-= A question that someone might have =
-
-
-
-
-== Screenshots ==
-asdada
-
-== Arbitrary section ==
-
-
-
-== A brief Markdown Example ==
-
