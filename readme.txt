@@ -11,8 +11,8 @@ It also can sort your links by custom.<br />
 
 == Description ==
 
-A small wordpress plugin which can sort your links by date,url,name, description, etc.
-It also can sort your links by custom.
+A small wordpress plugin which can sort your links by date,url,name, description, etc.<br />
+It also can sort your links by custom.<br />
 
 == Installation ==
 
