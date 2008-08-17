@@ -1,13 +1,13 @@
 === Plugin Name ===
 Contributors: hylwrcool@gmail.com
 Donate link: 
-Tags: links, sort
-Requires at least: 2.6
+Tags: links, sort, plugin,admin
+Requires at least: 2.1
 Tested up to: 2.6
 Stable tag: 0.2
 
-A small wordpress plugin which can sort your links by date,url,name, description, etc.
-It also can sort your links by custom.
+A small wordpress plugin which can sort your links by date,url,name, description, etc.<br />
+It also can sort your links by custom.<br />
 
 == Description ==
 
@@ -24,3 +24,9 @@ Download the zip file to your local machine.<br />
 
 
 == Frequently Asked Questions ==
+
+
+== Screenshots ==
+1.Sort By
+2.Sort Order
+3.Custom Sort
