@@ -20,8 +20,8 @@
 Plugin Name: CoCo Linksort
 Plugin URI: http://www.acwind.net/blog/?p=478
 Description: Sort your links by date, url, name, description, etc.
-Version: 0.4
-Author: CoCo & Amon
+Version: 0.5
+Author: CoCo
 Author URI: http://www.acwind.net/blog
 */
 $cocolinksort_domain = 'cocolinksort';
@@ -131,14 +131,9 @@ function list_bookmarks_sorted($user_defined){
 	echo "<legend><h2>" . __('Sort by user defined order', $cocolinksort_domain) . "</h2></legend>";
 	$terms = get_terms('link_category', 'order=desc');
 	if ($terms) {
-		global $dom_ids;
-		$dom_ids = array();
-		$cate_count = 0;
 		foreach($terms as $term) {
 			if ($term->count > 0) {
-				array_push($dom_ids, '#DragContainer_' . $cate_count);
-				echo "<fieldset class='DragContainerOuter'><legend><h3>" . $term->name . "</h3></legend><div id='DragContainer_{$cate_count}'>";
-				$cate_count++;
+				echo "<fieldset class='DragContainerOuter'><legend><h3>" . $term->name . "</h3></legend><div class='DragContainer'>";
 				$links = get_bookmarks(array('category'=>$term->term_id));
 				$links_sorted = sort_link_by_user_defined($links);
 				$count = count($links_sorted);
@@ -152,7 +147,6 @@ function list_bookmarks_sorted($user_defined){
 				echo "</div></fieldset>";
 			}
 		}
-		$dom_ids = implode(', ', $dom_ids);
 	}
 	echo "</fieldset>";
 }
@@ -222,7 +216,7 @@ function acwind_linksort_set(){
 		<form method="post" action="options.php">
 		<!--<input type="hidden" name="page_options" value="als_sort_id,als_order_type,cocolinksort_links_order" />
 		<input type="hidden" name="action" value="update" />-->
-		<?php //wp_nonce_field('update-options'); ?><?php settings_fields('cocolinksort'); do_settings_fields('cocolinksort'); ?>
+		<?php //wp_nonce_field('update-options'); ?><?php settings_fields('cocolinksort'); ?>
 		
   	  <table width="100%" cellspacing="2" cellpadding="5" class="editform">
 		    <tr valign="top"> 
@@ -249,11 +243,7 @@ function acwind_linksort_set(){
 		      </td>
 		    </tr>
 		</table>
-<?php
-wp_enqueue_script('jquery-ui-sortable');
-global $dom_ids;
-?>
-		<?php 
+		<?php
 		$user_defined = ($als_sort_id == 'user_define') ? true : false;
 		list_bookmarks_sorted($user_defined); 
 		?>
@@ -263,6 +253,9 @@ global $dom_ids;
     	</p>
 		</form>
 	</div>
+<?php
+wp_enqueue_script('jquery-ui-sortable');
+?>
 <style type="text/css">
 #div_links_sorted {
 	border: 1px #DFDFDF solid;
@@ -287,7 +280,7 @@ global $dom_ids;
 	width: 294px;
 	height: 25px;
 	background-color: #FFF;
-	font-size: 13px;
+	font-size: 10px;
 	line-height: 25px;
 	text-indent: 10px;
 }
@@ -304,10 +297,9 @@ global $dom_ids;
 }
 </style>
 <script type="text/javascript">
-var dom_ids = '<?php echo $dom_ids; ?>';
 jQuery(document).ready(
 	function() {
-		jQuery(dom_ids).sortable({
+		jQuery('.DragContainer').sortable({
 			opacity: 0.7,
 			cursor: 'move',
 			placeholder: 'sortable-placeholder',
@@ -318,7 +310,7 @@ jQuery(document).ready(
 				}
 			}
 		});
-		jQuery(dom_ids).disableSelection();
+		jQuery('.DragContainer').disableSelection();
 	}
 );
 </script>
@@ -344,19 +336,18 @@ add_action('admin_menu', 'als_add_options');
 ?>
 <?php
 remove_action('admin_menu', 'als_add_options');
-add_action('admin_menu', 'f1');
-function f1() {
+add_action('admin_menu', function() {
 	global $cocolinksort_domain;
 	add_options_page(__('Link Sort', $cocolinksort_domain), __('Link Sort', $cocolinksort_domain), 7, __FILE__, 'acwind_linksort_set'); //add_links_page
-	add_action('admin_init', f2);
-	add_filter('option_page_capability_cocolinksort', function($capability) {
+	add_action('admin_init', 'linksort_register_settings');
+	function linksort_register_settings() {
+		register_setting('cocolinksort', 'als_sort_id');
+		register_setting('cocolinksort', 'als_order_type');
+		register_setting('cocolinksort', 'cocolinksort_links_order');
+	}
+	add_filter('option_page_capability_cocolinksort', 'linksort_capability');
+	function linksort_capability($capability) {
 		return 'manage_links';
-	});
-}
-
-function f2() {
-	register_setting('cocolinksort', 'als_sort_id');
-	register_setting('cocolinksort', 'als_order_type');
-	register_setting('cocolinksort', 'cocolinksort_links_order');
-}
+	}
+});
 ?>
