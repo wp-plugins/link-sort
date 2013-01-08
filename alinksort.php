@@ -287,7 +287,7 @@ global $dom_ids;
 	width: 294px;
 	height: 25px;
 	background-color: #FFF;
-	font-size: 10px;
+	font-size: 13px;
 	line-height: 25px;
 	text-indent: 10px;
 }
