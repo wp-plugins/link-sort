@@ -20,7 +20,7 @@
 Plugin Name: CoCo Linksort
 Plugin URI: http://www.acwind.net/blog/?p=478
 Description: Sort your links by date, url, name, description, etc.
-Version: 0.3
+Version: 0.4
 Author: CoCo & Amon
 Author URI: http://www.acwind.net/blog
 */
@@ -344,16 +344,19 @@ add_action('admin_menu', 'als_add_options');
 ?>
 <?php
 remove_action('admin_menu', 'als_add_options');
-add_action('admin_menu', function() {
+add_action('admin_menu', 'f1');
+function f1() {
 	global $cocolinksort_domain;
 	add_options_page(__('Link Sort', $cocolinksort_domain), __('Link Sort', $cocolinksort_domain), 7, __FILE__, 'acwind_linksort_set'); //add_links_page
-	add_action('admin_init', function() {
-		register_setting('cocolinksort', 'als_sort_id');
-		register_setting('cocolinksort', 'als_order_type');
-		register_setting('cocolinksort', 'cocolinksort_links_order');
-	});
+	add_action('admin_init', f2);
 	add_filter('option_page_capability_cocolinksort', function($capability) {
 		return 'manage_links';
 	});
-});
+}
+
+function f2() {
+	register_setting('cocolinksort', 'als_sort_id');
+	register_setting('cocolinksort', 'als_order_type');
+	register_setting('cocolinksort', 'cocolinksort_links_order');
+}
 ?>
