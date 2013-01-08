@@ -53,7 +53,7 @@ msgstr "链接更新日期"
 
 #: alinksort.php:164
 msgid "Link Sort Options"
-msgstr "Link Sort 设置"
+msgstr "链接排序选项"
 
 #: alinksort.php:178
 msgid "Sort By"
@@ -79,3 +79,6 @@ msgstr "降序排列"
 msgid "Save Changes"
 msgstr "保存设置"
 
+#: alinksort.php:346
+msgid "Link Sort"
+msgstr "链接排序"

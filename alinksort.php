@@ -20,8 +20,8 @@
 Plugin Name: CoCo Linksort
 Plugin URI: http://www.acwind.net/blog/?p=478
 Description: Sort your links by date, url, name, description, etc.
-Version: 0.2
-Author: CoCo
+Version: 0.3
+Author: CoCo & Amon
 Author URI: http://www.acwind.net/blog
 */
 $cocolinksort_domain = 'cocolinksort';
@@ -102,7 +102,7 @@ function acwind_linksort($content){
 
 
 function list_bookmarks_sorted($user_defined){
-    global $cocolinksort_domain;
+    /*global $cocolinksort_domain;
     $links        = get_bookmarks();
 	$css_display  = ($user_defined) ? 'block' : 'none';
     $links_sorted = sort_link_by_user_defined($links);
@@ -123,7 +123,38 @@ function list_bookmarks_sorted($user_defined){
         echo "&nbsp;<a href='{$link_url}'>{$link_name}</a>";
         echo "<br />";
     }
-    echo "</div>";
+    echo "</div>";*/
+	global $cocolinksort_domain;
+	$css_display = ($user_defined) ? 'block' : 'none';
+
+	echo "<fieldset id='div_links_sorted' style='display:{$css_display};'>";
+	echo "<legend><h2>" . __('Sort by user defined order', $cocolinksort_domain) . "</h2></legend>";
+	$terms = get_terms('link_category', 'order=desc');
+	if ($terms) {
+		global $dom_ids;
+		$dom_ids = array();
+		$cate_count = 0;
+		foreach($terms as $term) {
+			if ($term->count > 0) {
+				array_push($dom_ids, '#DragContainer_' . $cate_count);
+				echo "<fieldset class='DragContainerOuter'><legend><h3>" . $term->name . "</h3></legend><div id='DragContainer_{$cate_count}'>";
+				$cate_count++;
+				$links = get_bookmarks(array('category'=>$term->term_id));
+				$links_sorted = sort_link_by_user_defined($links);
+				$count = count($links_sorted);
+				for ($i = 0; $i < $count; $i++) {
+					$link_id   = $links_sorted[$i]->link_id;
+					$link_url  = $links_sorted[$i]->link_url;
+					$link_name = $links_sorted[$i]->link_name;
+					$order_no  = $i + 1;
+					echo "<div class='sortable-item'><input type='hidden' size='1' name='cocolinksort_links_order[{$link_id}]' value='{$order_no}' /><a href='{$link_url}' target='_blank'>{$link_name}</a></div>";
+				}
+				echo "</div></fieldset>";
+			}
+		}
+		$dom_ids = implode(', ', $dom_ids);
+	}
+	echo "</fieldset>";
 }
 
 function acwind_linksort_set(){
@@ -179,55 +210,118 @@ function acwind_linksort_set(){
 	       });
         });
     </script> 
-		<h2><? _e('Link Sort Options', $cocolinksort_domain);?></h2>
-		<?if($locale <> 'zh_CN'){?>
+		<h2><?php _e('Link Sort Options', $cocolinksort_domain);?></h2>
+		<?php if($locale <> 'zh_CN'){?>
 		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
             <input type="hidden" name="cmd" value="_s-xclick">
             <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
             <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
             <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
         </form>
-        <?}?>
+        <?php }?>
 		<form method="post" action="options.php">
-		<input type="hidden" name="page_options" value="als_sort_id,als_order_type,cocolinksort_links_order" />
-		<input type="hidden" name="action" value="update" />
-		<?php wp_nonce_field('update-options'); ?>
+		<!--<input type="hidden" name="page_options" value="als_sort_id,als_order_type,cocolinksort_links_order" />
+		<input type="hidden" name="action" value="update" />-->
+		<?php //wp_nonce_field('update-options'); ?><?php settings_fields('cocolinksort'); do_settings_fields('cocolinksort'); ?>
 		
   	  <table width="100%" cellspacing="2" cellpadding="5" class="editform">
 		    <tr valign="top"> 
-		      <th width="15%" scope="row"><? _e('Sort By', $cocolinksort_domain);?> :</th> 
+		      <th width="15%" scope="row"><?php _e('Sort By', $cocolinksort_domain);?>:</th> 
 		      <td>
-				<select name='als_sort_id'">
+				<select name='als_sort_id'>
 					<?php
 					while(list($key, $value) = each($sort_id)){
 						$selected = ($als_sort_id == $key) ? 'selected' : '';
 						echo "<option value='{$key}' {$selected}>{$value}</option>";
 					}
 					?>
-					<option value="user_define" <?if($als_sort_id=='user_define')echo "selected";?>><? _e('Custom Order', $cocolinksort_domain);?></option>
+					<option value="user_define" <?php if($als_sort_id=='user_define')echo "selected";?>><?php _e('Custom Order', $cocolinksort_domain);?></option>
 				</select>
 		  	  </td>
 			</tr>
 			<tr valign="top"> 
-		      <th width="15%" scope="row"><? _e('Sort Order', $cocolinksort_domain);?>:</th> 
+		      <th width="15%" scope="row"><?php _e('Sort Order', $cocolinksort_domain);?>:</th> 
 		      <td>
 		        <select name='als_order_type'>
-					<option value="ASC"  <?if($als_order_type == 'ASC')  echo 'selected';?>><?_e('Ascending Order',  $cocolinksort_domain);?></option>
-					<option value="DESC" <?if($als_order_type == 'DESC') echo 'selected';?>><?_e('Descending Order', $cocolinksort_domain);?></option>
+					<option value="ASC"  <?php if($als_order_type == 'ASC')  echo 'selected';?>><?php _e('Ascending Order',  $cocolinksort_domain);?></option>
+					<option value="DESC" <?php if($als_order_type == 'DESC') echo 'selected';?>><?php _e('Descending Order', $cocolinksort_domain);?></option>
 				</select>
 		      </td>
 		    </tr>
 		</table>
-		<? 
+<?php
+wp_enqueue_script('jquery-ui-sortable');
+global $dom_ids;
+?>
+		<?php 
 		$user_defined = ($als_sort_id == 'user_define') ? true : false;
 		list_bookmarks_sorted($user_defined); 
 		?>
         
 		<p class="submit">
-      		<input type="submit" name="Submit" value="<?_e('Save Changes', $cocolinksort_domain);?>" />
+      		<input type="submit" name="Submit" value="<?php _e('Save Changes', $cocolinksort_domain);?>" />
     	</p>
 		</form>
 	</div>
+<style type="text/css">
+#div_links_sorted {
+	border: 1px #DFDFDF solid;
+	padding: 5px;
+	width: 318px;
+	border-radius: 8px;
+}
+.DragContainerOuter {
+	border: 1px #DFDFDF solid;
+	padding: 5px 5px 0px 5px;
+	margin: 3px 3px 12px 3px;
+	width: 300px;
+	border-radius: 6px;
+}
+.DragContainerOuter:last-child {
+	margin: 3px;
+}
+.sortable-item {
+	border: 1px #DFDFDF solid;
+	padding: 2px;
+	margin-bottom: 5px;
+	width: 294px;
+	height: 25px;
+	background-color: #FFF;
+	font-size: 10px;
+	line-height: 25px;
+	text-indent: 10px;
+}
+.sortable-placeholder {
+	border: 1px #DFDFDF doted;
+	padding: 2px;
+	margin-bottom: 5px;
+	height: 25px;
+	background-color: #FFF;
+}
+.ui-sortable {
+}
+.ui-sortable-helper {
+}
+</style>
+<script type="text/javascript">
+var dom_ids = '<?php echo $dom_ids; ?>';
+jQuery(document).ready(
+	function() {
+		jQuery(dom_ids).sortable({
+			opacity: 0.7,
+			cursor: 'move',
+			placeholder: 'sortable-placeholder',
+			stop: function(event, ui) {
+				var objs = jQuery(this).parent().find('input');
+				for (var i = 0; i < objs.length; i++) {
+					objs[i].value = i + 1;
+				}
+			}
+		});
+		jQuery(dom_ids).disableSelection();
+	}
+);
+</script>
 	<?php
 }
 
@@ -247,4 +341,19 @@ add_action('admin_menu', 'als_add_options');
 
 
 
+?>
+<?php
+remove_action('admin_menu', 'als_add_options');
+add_action('admin_menu', function() {
+	global $cocolinksort_domain;
+	add_options_page(__('Link Sort', $cocolinksort_domain), __('Link Sort', $cocolinksort_domain), 7, __FILE__, 'acwind_linksort_set'); //add_links_page
+	add_action('admin_init', function() {
+		register_setting('cocolinksort', 'als_sort_id');
+		register_setting('cocolinksort', 'als_order_type');
+		register_setting('cocolinksort', 'cocolinksort_links_order');
+	});
+	add_filter('option_page_capability_cocolinksort', function($capability) {
+		return 'manage_links';
+	});
+});
 ?>
