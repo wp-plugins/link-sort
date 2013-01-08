@@ -3,7 +3,7 @@ Contributors: hylwrcool@gmail.com
 Donate link: 
 Tags: links, sort, plugin,admin
 Requires at least: 2.1
-Tested up to: 2.6
+Tested up to: 3.5 
 Stable tag: 0.3
 
 A small wordpress plugin which can sort your links by date,url,name, description, etc.<br />
